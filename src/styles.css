@@ -1,4 +1,56 @@
-.grid-container {
+/* Center the calculator */
+body {
+  background-color: brown;
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  place-items: center;
+  
+}
+
+/* centers and fills the button to fit the container */
+#root {
+  display: grid;
+  place-items: stretch;
+
+  background: orange;
+  width: 400px;
+  height: 400px;
+}
+
+
+.calculator-container {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+}
+
+/* Center text inside buttons */
+.section{
+  text-align: center;
+  font-family: system-ui, sans-serif;
+}
+
+.output {
+  justify-self: end;
+  align-self: center;
+  font-family: 'Courier New', Courier, monospace;
+  padding-right: 1em;
+}
+
+#display {
+  /* start to finish span is how many spaces */
+  grid-column: 1 / span 4;
+}
+
+#clear {
+  grid-column: 1/ span 2;
+}
+
+#equals {
+  /* Equivalent code 
+  grid-column: 4 / span 1;
+  grid-row: 5 / span 2; */
+  grid-area: 5 / 4 / span 2 / span 1;
+}
+
+#zero {
+  grid-column: 1 / span 2;
 }
