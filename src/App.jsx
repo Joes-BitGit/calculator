@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles.css';
 import * as math from 'mathjs';
 
@@ -7,34 +7,50 @@ function App() {
   // State of the current button pressed
   const [input, setInput] = useState("");
 
+  const isNumber = (str) => {
+    return !isNaN(str) && !isNaN(parseFloat(str));
+  }
+
+  const isZero = (str) => {
+    // Check 2 things
+    // is this the first input of the calculator?
+    console.log('ZERO INPUT: ', input[input.length - 1]);
+    console.log('ZERO TEXT: ', str);
+    if (input === '0' && str === '0') return true;
+    // is this the first number after an operator?
+    if ((input[input.length - 2] === '+' ||
+      input[input.length - 2] === '/' ||
+      input[input.length - 2] === '*' ||
+      input[input.length - 2] === '-')
+      && (input[input.length - 1] === '0') &&
+      str === '0') {
+      return true;
+    }
+  }
+
   const handleClick = (e) => {
     // save this state in order to display in the output
     console.log("TARGET:", (e.target.textContent));
     // if the last element in string is zero dont add to input state
-    console.log("INPUT", input);
-    setInput(`${input}${e.target.textContent}`);
-
-
-    // if (input.charAt(1) === '0') setInput(` ${e.target.textContent}`)
-
-    // if (((input[input.length - 1] === '0') && e.target.textContent !== '0')) return;
-    // if (input.split(' ').slice(-1)[0] === '0') return;
-    // if (e.target.textContent.split()[0] === '0') return
-
-
-
+    console.log("INPUT:", input);
+    // First check if the given input is a number
+    if (isZero(e.target.textContent)) {
+      setInput(`${input}`);
+    } else if (isNumber(e.target.textContent) && input[input.length - 1] === '0') { // clears 0 when multiple 0s are pressed
+      setInput(`${input.slice(0, input.length - 1)}${e.target.textContent}`);
+    } else {
+      setInput(`${input}${e.target.textContent}`)
+    }
   }
 
   const handleEval = () => {
-
+    console.log('EVAL INPUT:', input);
     setInput(math.evaluate(input));
   }
 
   const handleClear = () => {
-    setInput("");
+    setInput("0");
   }
-
-
 
   return (
     <div className="calculator-container">
