@@ -6,6 +6,8 @@ import * as math from 'mathjs';
 function App() {
   // State of the current button pressed
   const [input, setInput] = useState("");
+  // state of decimal used true means you can still use your decimal
+  const [decimalFlag, setDecimalFlag] = useState(true);
 
   const isNumber = (str) => {
     return !isNaN(str) && !isNaN(parseFloat(str));
@@ -14,18 +16,55 @@ function App() {
   const isZero = (str) => {
     // Check 2 things
     // is this the first input of the calculator?
-    console.log('ZERO INPUT: ', input[input.length - 1]);
-    console.log('ZERO TEXT: ', str);
     if (input === '0' && str === '0') return true;
     // is this the first number after an operator?
     if ((input[input.length - 2] === '+' ||
       input[input.length - 2] === '/' ||
       input[input.length - 2] === '*' ||
-      input[input.length - 2] === '-')
-      && (input[input.length - 1] === '0') &&
-      str === '0') {
+      input[input.length - 2] === '-') &&
+      (input[input.length - 1] === '0') &&
+      str === '0' &&
+      input.length > 2) {
       return true;
     }
+    return false;
+  }
+
+  const isDecimal = (str) => {
+    if (str === '.') {
+      setDecimalFlag(false);
+      return true;
+    }
+    return false;
+  }
+
+  // logic b2b decimal
+  // if target text content is decimal and previous last string in input was decimal forgot it
+  const b2bDecimal = (str) => {
+    if (input[input.length - 1] === '.' && str === '.') {
+      return true;
+    }
+  }
+
+  // logic multiple decimal in number
+  // have a flag to raise when a decimal is used
+  // then flag down when an operator is used
+  const multipleDecimals = (str) => {
+    console.log('flag of decimal:', decimalFlag);
+    if (str === '.') {
+      return !decimalFlag;
+    }
+  }
+
+  const isOperator = (str) => {
+    if (str === '+' ||
+      str === '/' ||
+      str === '*' ||
+      str === '-') {
+      setDecimalFlag(true);
+      return true;
+    }
+    return false;
   }
 
   const handleClick = (e) => {
@@ -36,10 +75,22 @@ function App() {
     // First check if the given input is a number
     if (isZero(e.target.textContent)) {
       setInput(`${input}`);
-    } else if (isNumber(e.target.textContent) && input[input.length - 1] === '0') { // clears 0 when multiple 0s are pressed
-      setInput(`${input.slice(0, input.length - 1)}${e.target.textContent}`);
+    } /* else if (isNumber(e.target.textContent) && input[input.length - 1] === '0') { // clears 0 when multiple 0s are pressed
+      setInput(`${input.slice(0, input.length - 1)}${e.target.textContent}`); // BUG ALERT DOESNT ACCEPT e.g 1000
+    } */ else if (isDecimal(e.target.textContent)) {
+      if (b2bDecimal(e.target.textContent)) {
+        setInput(`${input}`)
+      } else if (multipleDecimals(e.target.textContent)) {
+        setInput(`${input}`)
+      } else {
+        setInput(`${input}${e.target.textContent}`);
+      }
+    } else if (isOperator(e.target.textContent)) {
+      setInput(`${input}${e.target.textContent}`);
+    } else if (isNumber(e.target.textContent)) {
+      setInput(`${input}${e.target.textContent}`);
     } else {
-      setInput(`${input}${e.target.textContent}`)
+      setInput(`${input}${e.target.textContent}`);
     }
   }
 
@@ -49,6 +100,7 @@ function App() {
   }
 
   const handleClear = () => {
+    setDecimalFlag(true);
     setInput("0");
   }
 
