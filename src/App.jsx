@@ -14,10 +14,17 @@ function App() {
   }
 
   const isZero = (str) => {
-    // Check 2 things
-    // is this the first input of the calculator?
+    if (str === '0') return true;
+    return false;
+  }
+  // is this the first input of the calculator?
+  const firstZeroInput = (str) => {
     if (input === '0' && str === '0') return true;
-    // is this the first number after an operator?
+    return false;
+  }
+
+  // is this the first number after an operator?
+  const firstZeroOperator = (str) => {
     if ((input[input.length - 2] === '+' ||
       input[input.length - 2] === '/' ||
       input[input.length - 2] === '*' ||
@@ -27,7 +34,6 @@ function App() {
       input.length > 2) {
       return true;
     }
-    return false;
   }
 
   const isDecimal = (str) => {
@@ -72,12 +78,16 @@ function App() {
     console.log("TARGET:", (e.target.textContent));
     // if the last element in string is zero dont add to input state
     console.log("INPUT:", input);
-    // First check if the given input is a number
+    // First check if the given input is a 0
     if (isZero(e.target.textContent)) {
-      setInput(`${input}`);
-    } /* else if (isNumber(e.target.textContent) && input[input.length - 1] === '0') { // clears 0 when multiple 0s are pressed
-      setInput(`${input.slice(0, input.length - 1)}${e.target.textContent}`); // BUG ALERT DOESNT ACCEPT e.g 1000
-    } */ else if (isDecimal(e.target.textContent)) {
+      if (firstZeroInput(e.target.textContent)) {
+        setInput(`${input}`);
+      } else if (firstZeroOperator(e.target.textContent)) {
+        setInput(`${input}`);
+      } else {
+        setInput(`${input}${e.target.textContent}`);
+      }
+    } else if (isDecimal(e.target.textContent)) {
       if (b2bDecimal(e.target.textContent)) {
         setInput(`${input}`)
       } else if (multipleDecimals(e.target.textContent)) {
@@ -88,7 +98,12 @@ function App() {
     } else if (isOperator(e.target.textContent)) {
       setInput(`${input}${e.target.textContent}`);
     } else if (isNumber(e.target.textContent)) {
-      setInput(`${input}${e.target.textContent}`);
+      // allows for recently clicked 0s to be cleared with a 1-9 
+      if (input[input.length - 1] === '0') {
+        setInput(`${input.slice(0, input.length - 1)}${e.target.textContent}`);
+      } else {
+        setInput(`${input}${e.target.textContent}`);
+      }
     } else {
       setInput(`${input}${e.target.textContent}`);
     }
