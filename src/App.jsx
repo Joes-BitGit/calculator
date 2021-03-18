@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './styles.css';
 import * as math from 'mathjs';
 
 
 function App() {
   // State of the current button pressed
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState("0");
   // state of decimal used true means you can still use your decimal
   const [decimalFlag, setDecimalFlag] = useState(true);
 
@@ -124,7 +124,7 @@ function App() {
       <div id="display" className="output">{input}</div>
       <button id="clear" className="section" onClick={handleClear}>AC</button>
       <button id="divide" className="operator section" onClick={handleClick}>/</button>
-      <button id="multiply" className="operator section" onClick={handleClick}>x</button>
+      <button id="multiply" className="operator section" onClick={handleClick}>*</button>
       <button id="seven" className="number section" onClick={handleClick}>7</button>
       <button id="eight" className="number section" onClick={handleClick}>8</button>
       <button id="nine" className="number section" onClick={handleClick}>9</button>
