@@ -67,17 +67,22 @@ function App() {
       str === '/' ||
       str === '*' ||
       str === '-') {
+      console.log("isOPERATOR: ", input);
       setDecimalFlag(true);
       return true;
     }
     return false;
   }
 
+  // const consecutiveOperators = (str) => {
+  //   if 
+  // }
+
   const handleClick = (e) => {
     // save this state in order to display in the output
-    console.log("TARGET:", (e.target.textContent));
+    // console.log("TARGET:", (e.target.textContent));
     // if the last element in string is zero dont add to input state
-    console.log("INPUT:", input);
+    // console.log("INPUT:", input);
     // First check if the given input is a 0
     if (isZero(e.target.textContent)) {
       if (firstZeroInput(e.target.textContent)) {
@@ -96,7 +101,12 @@ function App() {
         setInput(`${input}${e.target.textContent}`);
       }
     } else if (isOperator(e.target.textContent)) {
-      setInput(`${input}${e.target.textContent}`);
+      if (isOperator(input[input.length - 1])) {
+        setInput(`${input.slice(0, input.length - 1)}${e.target.textContent}`);
+      } else {
+        setInput(`${input}${e.target.textContent}`);
+      }
+
     } else if (isNumber(e.target.textContent)) {
       // allows for recently clicked 0s to be cleared with a 1-9 
       if (input[input.length - 1] === '0') {
