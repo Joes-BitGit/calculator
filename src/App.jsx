@@ -56,7 +56,7 @@ function App() {
   // have a flag to raise when a decimal is used
   // then flag down when an operator is used
   const multipleDecimals = (str) => {
-    console.log('flag of decimal:', decimalFlag);
+    // console.log('flag of decimal:', decimalFlag);
     if (str === '.') {
       return !decimalFlag;
     }
@@ -67,22 +67,23 @@ function App() {
       str === '/' ||
       str === '*' ||
       str === '-') {
-      console.log("isOPERATOR: ", input);
+      // console.log("isOPERATOR: ", input);
       setDecimalFlag(true);
       return true;
     }
     return false;
   }
 
-  // const consecutiveOperators = (str) => {
-  //   if 
-  // }
+  const isMinus = (str) => {
+    if (str === '-') return true;
+    return false;
+  }
+  const thirdOperator = () => {
+    if (isMinus(input[input.length - 1]) && isOperator(input[input.length - 2])) return true;
+    return false;
+  }
 
   const handleClick = (e) => {
-    // save this state in order to display in the output
-    // console.log("TARGET:", (e.target.textContent));
-    // if the last element in string is zero dont add to input state
-    // console.log("INPUT:", input);
     // First check if the given input is a 0
     if (isZero(e.target.textContent)) {
       if (firstZeroInput(e.target.textContent)) {
@@ -101,12 +102,25 @@ function App() {
         setInput(`${input}${e.target.textContent}`);
       }
     } else if (isOperator(e.target.textContent)) {
-      if (isOperator(input[input.length - 1])) {
-        setInput(`${input.slice(0, input.length - 1)}${e.target.textContent}`);
+      // 3rd operator 
+      if (thirdOperator()) {
+        if (isMinus(e.target.textContent)) {
+          setInput(`${input.slice(0, input.length - 1)}${e.target.textContent}`)
+        } else {
+          setInput(`${input.slice(0, input.length - 2)}${e.target.textContent}`)
+        }
+        // 2nd operator
+      } else if (isOperator(input[input.length - 1])) {
+        // if current isMinus and prev was a operator then you can add the minus to state display 
+        if (isMinus(e.target.textContent)) {
+          setInput(`${input}${e.target.textContent}`);
+        } else {
+          // clears previous operator and only adds the newest one
+          setInput(`${input.slice(0, input.length - 1)}${e.target.textContent}`);
+        }
       } else {
         setInput(`${input}${e.target.textContent}`);
       }
-
     } else if (isNumber(e.target.textContent)) {
       // allows for recently clicked 0s to be cleared with a 1-9 
       if (input[input.length - 1] === '0') {
@@ -120,7 +134,7 @@ function App() {
   }
 
   const handleEval = () => {
-    console.log('EVAL INPUT:', input);
+    // console.log('EVAL INPUT:', input);
     setInput(math.evaluate(input));
   }
 
